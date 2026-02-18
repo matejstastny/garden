@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+print_header() {
+  cat << "EOF"
+  ______ ____  __  __ 
+|  ____|  _ \|  \/  |
+| |__  | |_) | \  / |
+|  __| |  _ <| |\/| |
+| |    | |_) | |  | |
+|_|    |____/|_|  |_|
+EOF
+}
+
+print_header
+read -p "Enter backup path: " path
+path=$(eval echo "$path")
+
+# Check directory
+if [ ! -d "$path" ]; then
+  read -p "Directory does not exist. Create it? [y/N] " ans
+  [[ "$ans" =~ ^[Yy]$ ]] && mkdir -p "$path" || exit 1
+fi
+
+echo "Backing up to $(realpath "$path")"
+zip -r "${path}/fbm-backup.zip" "$HOME/Library/Application Support/factorio"
+echo "Finished backing up"
+
