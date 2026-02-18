@@ -1,0 +1,9 @@
+/* If the screen is less than 1200px, that show the hamburger, otherwise default */
+@media screen and (max-width: 1200px) {
+    #desktop-nav {
+        display: none;
+    }
+    #hamburger-nav {
+        display: flex;
+    }
+}

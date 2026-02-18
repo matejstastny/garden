@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>My Portfolio</title>
+        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="mediaqueries.css" />
+    </head>
+    <body>
+        <!--Navigation bar on the top of the screen-->
+        <nav id="desktop-nav">
+            <!--Title on the start-->
+            <div class="logo">Matěj Šťastný</div>
+            <div>
+                <!--List with the tab items-->
+                <ul class="nav-links">
+                    <li><a class="nav-link" href="#about">About</a></li>
+                    <li><a class="nav-link" href="#projects">Projects</a></li>
+                    <li>
+                        <a class="nav-link" href="#expirience">Expirience</a>
+                    </li>
+                    <li><a class="nav-link" href="#links">Links</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <nav id="hamburger-nav">
+            <div class="logo">Matěj Šťastný</div>
+            <div class="hamburger-icon" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="menu-links">
+                <li><a href="#about" onclick=" toggleMenu()">About</a></li>
+                <li><a href="#projects" onclick="toggleMenu()">Projects</a></li>
+                <li>
+                    <a href="#expirience" onclick="toggleMenu()">Expirience</a>
+                </li>
+                <li><a href="#links" onclick="toggleMenu()">Links</a></li>
+            </div>
+        </nav>
+        <script src="script.js"></script>
+    </body>
+</html>
