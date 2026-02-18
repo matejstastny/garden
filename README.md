@@ -1,16 +1,3 @@
-<!-- https://patorjk.com/software/taag/?p=display&f=Big&t=matejstastny%2Fjava&x=none -->
-
-<div>
-<pre>
-                  _       _     _            _                   ___
-                 | |     (_)   | |          | |                 / (_)
-  _ __ ___   __ _| |_ ___ _ ___| |_ __ _ ___| |_ _ __  _   _   / / _  __ ___   ____ _
- | '_ ` _ \ / _` | __/ _ \ / __| __/ _` / __| __| '_ \| | | | / / | |/ _` \ \ / / _` |
- | | | | | | (_| | ||  __/ \__ \ || (_| \__ \ |_| | | | |_| |/ /  | | (_| |\ V / (_| |
- |_| |_| |_|\__,_|\__\___| |___/\__\__,_|___/\__|_| |_|\__, /_/   | |\__,_| \_/ \__,_|
-                        _/ |                            __/ |    _/ |
-                       |__/                            |___/    |__/
-</pre>
-</div>
+<img src="./banner.jpeg" alt="banner" width="100%">
 
 > Understand the code before you run it! Run at your own risk!
