@@ -1,0 +1,113 @@
+#!/bin/bash
+
+# --------------------------------------------------------------------------------------------
+# nekodisk - diskutil list wrapper with pretty output
+# --------------------------------------------------------------------------------------------
+
+PURPLE="\033[0;35m"
+RED="\033[31m"
+BLUE="\033[34m"
+GREEN="\033[32m"
+WHITE="\033[37m"
+BOLD="\033[1m"
+RESET="\033[0m"
+
+# Helpers ------------------------------------------------------------------------------------
+
+print_line() {
+    local left=$1 mid=$2 right=$3
+    printf "${BLUE}%s" "$left"
+    for col in $(seq 0 4); do
+        printf '─%.0s' $(seq 1 $((${widths[$col]} + 2)))
+        if [ $col -lt 4 ]; then
+            printf "%s" "$mid"
+        fi
+    done
+    printf "%s${RESET}\n" "$right"
+}
+
+print_row() {
+    local arrname=$1
+    eval "arr=(\"\${$arrname[@]}\")"
+    printf "${BLUE}│${RESET}"
+    for col in $(seq 0 4); do
+        field="${arr[$col]}"
+        if [[ "${arr[0]}" == "#" || $col -eq 0 ]]; then
+            printf " ${GREEN}%-${widths[$col]}s${RESET}${BLUE} │${RESET}" "$field"
+        else
+            if [ $col -eq 1 ]; then
+                printf " \033[3m${PURPLE}%-${widths[$col]}s${RESET}${BLUE} │${RESET}" "$field"
+            else
+                printf " ${WHITE}%-${widths[$col]}s${RESET}${BLUE} │${RESET}" "$field"
+            fi
+        fi
+    done
+    echo
+}
+
+# --------------------------------------------------------------------------------------------
+# Flags --------------------------------------------------------------------------------------
+
+only_external=0
+while getopts "e" opt; do
+    case $opt in
+    e) only_external=1 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+# Grab disk data -----------------------------------------------------------------------------
+
+echo ""
+disks=$(diskutil list)
+
+if [[ -z "$disks" ]]; then
+    echo -e "${RED} ⚠️ diskutil list didn't return anything!${RESET}"
+    exit 1
+fi
+
+rows=()
+i=1
+
+while IFS= read -r line; do
+    [[ ! $line =~ ^/dev/disk ]] && continue
+
+    ident=$(echo "$line" | awk '{print $1}')
+    [[ $only_external -eq 1 && -z $(diskutil info "$ident" | grep External) ]] && continue
+    type=$(echo "$line" | awk -F '[()]' '{print $2}')
+    size=$(diskutil info "$ident" | awk -F': *' '/Disk Size/ {print $2; exit}' | awk -F' \\(' '{print $1}')
+    [[ -z "$size" ]] && size="-"
+    mount=$(diskutil info "$ident" | awk -F': *' '/Mount Point/ {print $2; exit}')
+    [[ -z "$mount" ]] && mount="-"
+
+    rows+=("$i|$ident|$size|$type|$mount")
+    ((i++))
+done <<<"$disks"
+
+# Calculate table ----------------------------------------------------------------------------
+
+headers=("#" "Identifier" "Size" "Type" "Mount")
+
+widths=()
+for col in $(seq 0 4); do
+    max=${#headers[$col]}
+    for row in "${rows[@]}"; do
+        field=$(echo "$row" | cut -d'|' -f$((col + 1)))
+        ((${#field} > max)) && max=${#field}
+    done
+    widths[$col]=$max
+done
+
+# Print table --------------------------------------------------------------------------------
+
+print_line "╭" "┬" "╮"
+printf "${BOLD}"
+print_row headers
+printf "${RESET}"
+print_line "├" "┼" "┤"
+for row in "${rows[@]}"; do
+    IFS="|" read -r f1 f2 f3 f4 f5 <<<"$row"
+    fields=("$f1" "$f2" "$f3" "$f4" "$f5")
+    print_row fields
+done
+print_line "╰" "┴" "╯"
